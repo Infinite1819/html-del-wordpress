@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Documentación sobre como instal·lar Wordpress </title>
+</head>
+<body>
+    <p>
+        <h2> Com instal·lar wordpress explicat </h2>
+        <b> Primer de tot haurem d'actualitzar la màquina virtual, per portar aquesta acció a cap hem d'escriure aquesta comanda: </b>
+        <br>
+        <br>
+        sudo apt update && sudo apt upgrade
+        <br>
+        <br>
+        <b> Instal·larem el servei apache2 </b>
+        <br>
+        <br>
+        sudo apt install apache2
+        <br>
+        <br>
+        <b> Comprovem si el servei està actiu </b>
+        <br>
+        <br>
+        sudo systemctl enable apache2
+        <br>
+        <br>
+        <b> Comprovem l'estatus del servei </b>
+        <br>
+        <br>
+        systemctl status apache2
+        <br>
+        <br>
+        <b> Instal·lem php amb les versions que es requereixen. </b>
+        <br>
+        <br>
+        sudo apt install -y php
+        <br>
+        <br>
+        <b> Per comprovar l'estatus de php escrivim la següent comanda: </b>
+        <br>
+        <br>
+        php -v
+        <br>
+        <br>
+        <b> Instal·lem mysql: </b>
+        <br>
+        <br>
+        sudo apt install mysql-server mysql-client:
+        <br>
+        <br>
+        <b> Comprovem si està actiu: </b>
+        <br>
+        <br>
+        sudo systemctl enable --now mysql
+        <br>
+        <br>
+        <b> Comprovem l'estatus del servei </b>
+        <br>
+        <br>
+        systemctl status mysql
+        <br>
+        <br>
+        <b> Utilitzarem la següent comanda per instal·lar mysql. </b>
+        <br>
+        <br>
+        sudo mysql secure installation
+        <br>
+        <br>
+        <b> Una vegada instal·lat, hem de crear una nova base de dades. Aquesta comanda té la funció de què l'usuari crei la base de dades des de zero. </b>
+        <br>
+        <br>
+        sudo mysql -u root -p
+        <br>
+        <br>
+        <b> Una vegada escrivim la comanda, haurem d'escriure les següents frases: </b>
+        <br>
+        <br>
+        <b> CREATE USER 'new_user'@'localhost' IDENTIFIED BY 'your_password'; </b>
+        <br>
+        <br>
+        (crea un usuari)
+        <br>
+        <br>
+        <b> CREATE DATABASE new_db; </b>
+        <br>
+        <br>
+        (crea una base de dades)
+        <br>
+        <br>
+        <b> GRANT ALL PRIVILEGES ON new_db.* TO 'new_user'@'localhost'; </b>
+        <br>
+        <br>
+        (proporciona privilegis)
+        <br>
+        <br>
+        <b> FLUSH PRIVILEGES; </b>
+        <br>
+        <br>
+        (Sol·licita que Mysql torni a llegir la taula de privilegis)
+        <br>
+        <br>
+        <b> Exit; </b>
+        <br>
+        <br>
+        (surts del sudo mysql -u root -p)
+        <br>
+        <br>
+        <b> Ara instal·larem manualment wordpress amb les següents comandes: </b>
+        <br>
+        <br>
+        sudo apt install wget unzip
+        <br>
+        <br>
+        <b> Instal·lem wordpress </b>
+        <br>
+        <br>
+        wget https://wordpress.org/latest.zip
+        <br>
+        <br>
+        <b> Extraiem l'arxiu: </b>
+        <br>
+        <br>
+        sudo unzip latest.zip
+        <br>
+        <br>
+        <b> El movem a la carpeta de la web </b>
+        <br>
+        <br>
+        sudo mv wordpress/ /var/www/html/
+        <br>
+        <br>
+        <b> Eliminem l'arxiu per alliberar espai </b>
+        <br>
+        <br>
+        sudo rm latest.zip
+        <br>
+        <br>
+        <b> Canviem els permisos de l'arxiu </b>
+        <br>
+        <br>
+        sudo chown www-data:www-data -R /var/www/html/wordpress/
+        <br>
+        <br>
+        sudo chmod -R 755 /var/www/html/wordpress/
+        <br>
+        <br>
+        <b> Després de descarregar tot el necessari hem de configurar el WordPress </b>
+        <br>
+        <br>
+        sudo nano /etc/apache2/sites-available/wordpress.conf
+        <br>
+        <br>
+        <b> (Dintre el nano afegirem les següents línies de text) </b>
+        <br>
+        <br>
+        <br>
+        <b> <"VirtualHost *:80"> (sense les cometes) </b>
+        <br>
+        <br>
+        <b> ServerAdmin admin@example.com </b>
+        <br>
+        <br>
+        <b> DocumentRoot /var/www/html/wordpress </b>
+        <br>
+        <br>
+        <b> ServerName example.com </b>
+        <br>
+        <br>
+        <b> ServerAlias www.example.com </b>
+        <br>
+        <br>
+        <b> <"Directory /var/www/html/wordpress/"> (sense les cometes) </b>
+        <br>
+        <br>
+        <b> Options FollowSymLinks </b>
+        <br>
+        <br>
+        <b> AllowOverride All </b>
+        <br>
+        <br>
+        <b> Require all granted </b>
+        <br>
+        <br>
+        <b> </"Directory"> (sense les cometes) </b>
+        <br>
+        <br>
+        <b> ErrorLog ${APACHE_LOG_DIR}/error.log </b>
+        <br>
+        <br>
+        <b> CustomLog ${APACHE_LOG_DIR}/access.log combined </b>
+        <br>
+        <br>
+        <b> </"VirtualHost"> </b>
+        <br>
+        <br>
+        <b> Activem el Host Virtual </b>
+        <br>
+        <br>
+        sudo a2ensite wordpress.conf
+        <br>
+        <br>
+        <b> Activem el mòdul per reescriure </b>
+        <br>
+        <br>
+        sudo a2enmod rewrite
+        <br>
+        <br>
+        <b> Seguidament, hem de desactivar la pàgina per defecte de tests d'Apache2 </b>
+        <br>
+        <br>
+        sudo a2dissite 000-default.conf
+        <br>
+        <br>
+        <b> Reiniciem el webserver de apache2 per aplicar els canvis. </b>
+        <br>
+        <br>
+        sudo systemctl restart apache2
+        <br>
+        <br>
+        <b> Una vegada tot fet, anem a Google i escrivim el següent en: </b>
+        <br>
+        <br>
+        <b> http://your-server-ip-address </b>
+        <br>
+        <br>
+        <b> (on 'your-server-ip-address' és la ip del nostre servidor) </b>
+    </p>
+</body>
+</html>
